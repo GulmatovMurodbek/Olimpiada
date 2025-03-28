@@ -1,0 +1,17 @@
+{
+  "welcome": "Welcome",
+  "login": "Login",
+  "fullName": "Full Name",
+  "passworld": "Password",
+  "go": "Enter",
+  "register": "Register",
+  "picture": "Upload your picture",
+  "accout": "Don't have an account",
+  "accoutHave": "I have an account",
+  "good": "Login successful!",
+  "home": "Home",
+  "product": "Product",
+  "masseges": "Messages",
+  "about": "About us",
+  "contact": "Contact us"
+}
