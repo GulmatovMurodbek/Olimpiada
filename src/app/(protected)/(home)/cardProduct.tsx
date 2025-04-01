@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import Like from "./like";
 import { useRouter } from "next/navigation";
+import ProductCament from "./productCament";
 
 interface ProductCardProps {
   product: {
@@ -21,27 +22,32 @@ interface ProductCardProps {
     newPrice: number;
     discount?: number;
     iduser: string;
-  };
+  }
 }
-interface Saller{
-  email:string
-  id:string | number,
-  imageUsers:string,
-  name:string
+interface Saller {
+  email: string;
+  id: string | number;
+  imageUsers: string;
+  name: string;
 }
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product}: ProductCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   let [saller, setSaller] = useState<Saller>();
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {name: string; age: number;imageUsers:string,id:string |number };
+  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+    name: string;
+    age: number;
+    imageUsers: string;
+    id: string | number;
+  };
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
   };
   const prevImage = () => {
     setCurrentImageIndex(
-      (prev:any) => (prev - 1 + product.images.length) % product.images.length
+      (prev: any) => (prev - 1 + product.images.length) % product.images.length
     );
   };
- let router=useRouter()
+  let router = useRouter();
 
   async function getByIdUser() {
     try {
@@ -56,20 +62,21 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
   async function getUserforCart() {
     try {
-      await axios.get(`http://localhost:5000/users/${user.id}/cart-saved`)
+      await axios.get(`http://localhost:5000/users/${user.id}/cart-saved`);
     } catch (error) {
       console.error(error);
-      
     }
   }
   const toggleCart = async () => {
     try {
-      const userResponse = await fetch(`http://localhost:5000/users/${user.id}/cart-saved`);
+      const userResponse = await fetch(
+        `http://localhost:5000/users/${user.id}/cart-saved`
+      );
       if (!userResponse.ok) throw new Error("User not found");
 
       const userData = await userResponse.json();
       console.log(userData);
-      
+
       let updatedCart = [...userData.cart];
 
       let productIndex = updatedCart.findIndex(
@@ -85,14 +92,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         });
       }
 
-      const response = await fetch(`http://localhost:5000/users/${user.id}/cart`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cart: updatedCart }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/users/${user.id}/cart`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cart: updatedCart }),
+        }
+      );
 
       if (response.ok) {
-      getUserforCart()
+        getUserforCart();
       } else {
         console.error("Error updating cart:", await response.text());
       }
@@ -100,14 +110,18 @@ export default function ProductCard({ product }: ProductCardProps) {
       console.error("Error updating cart", error);
     }
   };
-  
+
   useEffect(() => {
     getByIdUser();
-    getUserforCart()
+    getUserforCart();
   }, []);
   function gotoInfoPage() {
-    router.push(`/product/${product.id}`)
-    localStorage.setItem("iduser",product.iduser)
+    router.push(`/product/${product.id}`);
+    localStorage.setItem("iduser", product.iduser);
+  }
+  function gotoPrifelById() {
+    router.push(`/profile/${saller?.id}`);
+    localStorage.setItem("iduserforprile", product.iduser);
   }
   return (
     <Card className="w-full max-w-sm overflow-hidden group h-[450px]">
@@ -181,7 +195,10 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={gotoPrifelById}
+        >
           <Avatar className="h-6 w-6">
             <AvatarImage src={saller?.imageUsers} alt={""} />
             <AvatarFallback>{""}</AvatarFallback>
@@ -224,6 +241,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
             </svg>
           </span>
+          <ProductCament idProduct={product.id}/>
         </div>
       </CardFooter>
     </Card>

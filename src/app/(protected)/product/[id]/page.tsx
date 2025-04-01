@@ -121,7 +121,6 @@ const ProductInfo = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Image skeleton */}
           <div className="w-full md:w-1/2">
             <Skeleton className="aspect-square w-full rounded-xl" />
             <div className="flex gap-2 mt-4">
@@ -131,7 +130,6 @@ const ProductInfo = () => {
             </div>
           </div>
 
-          {/* Content skeleton */}
           <div className="w-full md:w-1/2">
             <Skeleton className="h-10 w-3/4 mb-4" />
             <Skeleton className="h-6 w-1/4 mb-6" />

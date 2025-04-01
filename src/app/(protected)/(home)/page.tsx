@@ -6,7 +6,6 @@ import "./home.css";
 import axios from "axios";
 import CategoryCard from "./category";
 import {
-  CheckCircle,
   MessageCircle,
   Search,
   ShoppingBag,
@@ -15,7 +14,6 @@ import {
   Zap,
 } from "lucide-react";
 import ProductCard from "./cardProduct";
-import TestimonialCard from "./card1";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -65,8 +63,8 @@ const Home = () => {
   };
   return (
     <>
-      <div className="w-full flex p-5 items-center justify-center gap-[50px] mt-[20px]  dark:bg-[black] divAll2">
-        <div className="w-[30%]">
+      <div className="w-full flex flex-col lg:flex-row p-5 items-center justify-center gap-[50px] mt-[20px]  dark:bg-[black] divAll2">
+        <div className="w-[90%] lg:w-[30%]">
           <h1 className="text-4xl font-sans">{t("homePageHeaderWorld")}</h1>
           <div className="flex mt-[40px] gap-4">
             <button className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
@@ -77,7 +75,7 @@ const Home = () => {
             </button>
           </div>
         </div>
-        <div className="w-[40%] h-[500px] divRight rounded-2xl shadow-[0px_0px_10px_grey]"></div>
+        <div className="w-[90%] lg:w-[40%] h-[500px] divRight rounded-2xl shadow-[0px_0px_10px_grey]"></div>
       </div>
       <section className="py-12 bg-gray-50 dark:bg-[black]">
         <div className="container mx-auto px-4">
@@ -99,7 +97,7 @@ const Home = () => {
         <h3 className="text-2xl font-bold text-center mb-10 text-amber-900">
           {t("whySellWithUs")}
         </h3>
-        <div className="flex gap-[20px]">
+        <div className=" flex flex-col lg:flex-row  gap-[20px] ">
           <div className="bg-white dark:bg-[black] p-6 rounded-xl shadow-sm border border-amber-100 text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]">
             <div className="text-4xl mb-4">🌍</div>
             <h4 className="text-lg font-semibold mb-2 text-amber-900">
@@ -131,9 +129,9 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="w-full flex p-5 items-center justify-center gap-[50px] mt-[20px] bg-[oldlace] dark:bg-[black] divAll2">
-        <div className="w-[40%] h-[500px] divRight2 rounded-2xl shadow-[0px_0px_10px_grey]"></div>
-        <div className="w-[30%]">
+      <div className="w-full flex flex-col lg:flex-row p-5 items-center justify-center gap-[50px] mt-[20px] bg-[oldlace] dark:bg-[black] divAll2">
+        <div className="w-[100%] lg:w-[40%]  h-[500px] divRight2 rounded-2xl shadow-[0px_0px_10px_grey]"></div>
+        <div className="w-[100%] lg:w-[30%]">
           <h1 className="text-4xl font-sans">{t("everyCraft")}</h1>
           <div className="flex mt-[40px] gap-4">
             <button className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
@@ -145,12 +143,11 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {getRandomProducts(products, 8).map((product: any) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product}/>
           ))}
         </div>
       </div>

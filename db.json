@@ -1,0 +1,21 @@
+{
+  "product": [
+    {
+      "id": 1,
+      "name": "wqer",
+      "images": [
+        "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743262157023_0.png",
+        "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743262157025_1.png",
+        "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743262157027_2.png"
+      ],
+      "originalPrice": 1234,
+      "newPrice": 234,
+      "about": "asdfsadfg",
+      "minOrder": 23,
+      "size": "sdf",
+      "weight": "sdf",
+      "category": "sadf",
+      "iduser": 12
+    }
+  ]
+}

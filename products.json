@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "wergt",
+    "images": [
+      "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743261743855_0.png",
+      "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743261743858_1.png",
+      "C:\\Users\\Dell\\Desktop\\Olimpiada\\my-app\\uploads\\1743261743860_2.png"
+    ],
+    "originalPrice": 23,
+    "newPrice": 234,
+    "about": "2134",
+    "minOrder": 23,
+    "size": "we",
+    "weight": "asd",
+    "category": "asdfg",
+    "iduser": 12
+  }
+]

@@ -4,6 +4,7 @@ import fs from "fs";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import path from "path";
+import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 
 const app = express();
@@ -12,6 +13,13 @@ const SECRET_KEY = "your_secret_key";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const filePath = path.join(__dirname, "data", "db.json");
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.use(cors());
 app.use(express.json());
@@ -39,10 +47,12 @@ app.get("/category", (req, res) => {
 });
 app.post("/register", async (req, res) => {
   const { name, email, password, imageUsers } = req.body;
-  if (!password) return res.status(400).json({ error: "Парол бояд ворид карда шавад!" });
+  if (!password)
+    return res.status(400).json({ error: "Парол бояд ворид карда шавад!" });
 
   fs.readFile(filePath, "utf8", async (err, data) => {
-    if (err) return res.status(500).json({ error: "Маълумотро хонда натавонистем!" });
+    if (err)
+      return res.status(500).json({ error: "Маълумотро хонда натавонистем!" });
 
     let jsonData = JSON.parse(data);
     let users = jsonData.users || [];
@@ -67,11 +77,22 @@ app.post("/register", async (req, res) => {
       jsonData.users = users;
 
       fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), (err) => {
-        if (err) return res.status(500).json({ error: "Хатогӣ ҳангоми сабти корбар!" });
+        if (err)
+          return res
+            .status(500)
+            .json({ error: "Хатогӣ ҳангоми сабти корбар!" });
 
-        const token = jwt.sign({ id: newUser.id, email: newUser.email }, SECRET_KEY, { expiresIn: "1h" });
+        const token = jwt.sign(
+          { id: newUser.id, email: newUser.email },
+          SECRET_KEY,
+          { expiresIn: "1h" }
+        );
 
-        res.json({ message: "Корбар бомуваффақият сабти ном шуд!", token, user: newUser });
+        res.json({
+          message: "Корбар бомуваффақият сабти ном шуд!",
+          token,
+          user: newUser,
+        });
       });
     } catch (error) {
       res.status(500).json({ error: "Хатогӣ ҳангоми ҳеш кардани парол!" });
@@ -87,12 +108,15 @@ app.patch("/users/:id/saved", (req, res) => {
     const jsonData = JSON.parse(data);
 
     const userIndex = jsonData.users.findIndex((user) => user.id == userId);
-    if (userIndex === -1) return res.status(404).json({ message: "User not found" });
+    if (userIndex === -1)
+      return res.status(404).json({ message: "User not found" });
 
     jsonData.users[userIndex].saved = jsonData.users[userIndex].saved || [];
     let savedProducts = jsonData.users[userIndex].saved;
 
-    const existingIndex = savedProducts.findIndex((p) => p.idProduct == productId);
+    const existingIndex = savedProducts.findIndex(
+      (p) => p.idProduct == productId
+    );
     if (existingIndex !== -1) {
       savedProducts.splice(existingIndex, 1);
     } else {
@@ -110,18 +134,19 @@ app.get("/users/:id", (req, res) => {
     const jsonData = JSON.parse(data);
 
     if (!jsonData.users) {
-      return res.status(500).json({ message: "Массиви users дар db.json пайдо нашуд" });
+      return res
+        .status(500)
+        .json({ message: "Массиви users дар db.json пайдо нашуд" });
     }
 
-    const user = jsonData.users.find(user => user.id == req.params.id);
+    const user = jsonData.users.find((user) => user.id == req.params.id);
     if (!user) {
       return res.status(404).json({ message: "Корбар пайдо нашуд!" });
     }
 
-    // Ҳангоми бозгардонидани маълумот, паролро хориҷ мекунем
-    const { password,cart,saved, ...userWithoutPassword } = user;  // Ҳар чизро ҷуз парол
+    const { password, cart, saved, ...userWithoutPassword } = user;
 
-    res.status(200).json(userWithoutPassword);  // Маълумот бе парол
+    res.status(200).json(userWithoutPassword);
   } catch (error) {
     res.status(500).json({ message: "Хатогӣ дар хониши db.json", error });
   }
@@ -132,9 +157,11 @@ app.get("/users/:id/cart-saved", (req, res) => {
     const jsonData = JSON.parse(data);
 
     if (!jsonData.users) {
-      return res.status(500).json({ message: "Массиви users дар db.json пайдо нашуд" });
+      return res
+        .status(500)
+        .json({ message: "Массиви users дар db.json пайдо нашуд" });
     }
-    const user = jsonData.users.find(user => user.id == req.params.id);
+    const user = jsonData.users.find((user) => user.id == req.params.id);
     const { password, ...userWithoutPassword } = user;
     if (!user) {
       return res.status(404).json({ message: "Корбар пайдо нашуд!" });
@@ -145,16 +172,20 @@ app.get("/users/:id/cart-saved", (req, res) => {
     res.status(500).json({ message: "Хатогӣ дар хониши db.json", error });
   }
 });
-app.get("/product/:id", (req, res) => { 
+app.get("/product/:id", (req, res) => {
   try {
     const data = fs.readFileSync(filePath, "utf8");
     const jsonData = JSON.parse(data);
 
     if (!jsonData.product) {
-      return res.status(500).json({ message: "Массиви products дар db.json пайдо нашуд" });
+      return res
+        .status(500)
+        .json({ message: "Массиви products дар db.json пайдо нашуд" });
     }
 
-    const productbyid = jsonData.product.find((product) => product.id == req.params.id);
+    const productbyid = jsonData.product.find(
+      (product) => product.id == req.params.id
+    );
     if (!productbyid) {
       return res.status(404).json({ message: "Маҳсулот пайдо нашуд" });
     }
@@ -172,12 +203,16 @@ app.post("/login", async (req, res) => {
     let users = jsonData.users;
 
     const user = users.find((user) => user.email === email);
-    if (!user) return res.status(400).json({ error: "Email ё парол нодуруст аст!" });
+    if (!user)
+      return res.status(400).json({ error: "Email ё парол нодуруст аст!" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Email ё парол нодуруст аст!" });
+    if (!isMatch)
+      return res.status(400).json({ error: "Email ё парол нодуруст аст!" });
 
-    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user.id, email: user.email }, SECRET_KEY, {
+      expiresIn: "7d",
+    });
     res.json({ message: "Воридшавӣ муваффақона анҷом ёфт!", token, user });
   } catch (error) {
     res.status(500).json({ error: "Хатогӣ дар сервер!" });
@@ -186,11 +221,11 @@ app.post("/login", async (req, res) => {
 app.patch("/users/:id/cart", (req, res) => {
   try {
     const { id } = req.params;
-    const { cart } = req.body; 
+    const { cart } = req.body;
     const data = fs.readFileSync(filePath, "utf8");
     const jsonData = JSON.parse(data);
 
-    let userIndex = jsonData.users.findIndex(user => user.id == id);
+    let userIndex = jsonData.users.findIndex((user) => user.id == id);
     if (userIndex === -1) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -206,43 +241,85 @@ app.patch("/users/:id/cart", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Сервер дар порт ${PORT} кор мекунад`);
 });
-app.get("/product/users/:userId",(req,res)=>
-{
-  fs.readFile(filePath,"utf8",(err,data)=>
-  {
-    if(err)
-    {
-      return res.status(500).json({"eror":"Cant not read data"})
+app.get("/product/users/:userId", (req, res) => {
+  fs.readFile(filePath, "utf8", (err, data) => {
+    if (err) {
+      return res.status(500).json({ eror: "Cant not read data" });
     }
     const jsonData = JSON.parse(data);
     const { userId } = req.params;
     if (!jsonData.product) {
-      return res.status(500).json({ message: "Массиви products дар db.json вуҷуд надорад!" });
+      return res
+        .status(500)
+        .json({ message: "Массиви products дар db.json вуҷуд надорад!" });
     }
-    const userProducts = jsonData.product.filter(product => product.iduser == userId);
+    const userProducts = jsonData.product.filter(
+      (product) => product.iduser == userId
+    );
     if (userProducts.length === 0) {
-      return res.status(404).json({ message: "Ин корбар ягон маҳсулот надорад!" });
+      return res
+        .status(404)
+        .json({ message: "Ин корбар ягон маҳсулот надорад!" });
     }
     res.status(200).json(userProducts);
-  })
-})
+  });
+});
 app.get("/users/:id/saved-products", (req, res) => {
   try {
     const data = fs.readFileSync(filePath, "utf8");
     const jsonData = JSON.parse(data);
 
-    const user = jsonData.users.find(user => user.id == req.params.id);
+    const user = jsonData.users.find((user) => user.id == req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const savedProducts = user.saved.map(savedItem => {
-      const product = jsonData.product.find(p => p.id == savedItem.idProduct);
-      return product ? { ...savedItem, ...product } : null;
-    }).filter(item => item !== null); 
+    const savedProducts = user.saved
+      .map((savedItem) => {
+        const product = jsonData.product.find(
+          (p) => p.id == savedItem.idProduct
+        );
+        return product ? { ...savedItem, ...product } : null;
+      })
+      .filter((item) => item !== null);
 
     res.status(200).json(savedProducts);
   } catch (error) {
     res.status(500).json({ message: "Error fetching saved products", error });
   }
 });
+app.post("/addComment", (req, res) => {
+  const data = fs.readFileSync(filePath, "utf8");
+  const jsonData = JSON.parse(data);
+  try {
+    const { idaddcoment, text, nameAddComents, imgAddCommentUser,productId } = req.body;
+    if (!text || !nameAddComents || !imgAddCommentUser) {
+      return res.status(400).json({ message: "Ҳамаи майдонҳо ҳатмист!" });
+    }
+    const newComment = {
+      idaddcoment:idaddcoment.toString(), 
+      idcoment:Date.now().toString(),
+      text,
+      nameAddComents,
+      imgAddCommentUser,
+      replies: []
+    };
+    let findProduct=jsonData.product.find(el=>el.id==productId)
+    findProduct.camments.push(newComment)
+    fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf8");
+    res.status(201).json({ message: "Камент илова шуд!", comment: newComment });
+  } catch (error) {
+    res.status(500).json({ message: "Хатогӣ рӯй дод!", error });
+  }
+});
+
+app.post("/addreplice",(req,res)=>
+{
+  const data = fs.readFileSync(filePath, "utf8");
+  const jsonData = JSON.parse(data);
+  try {
+    
+  } catch (error) {
+    console.error(error);
+  }
+})
