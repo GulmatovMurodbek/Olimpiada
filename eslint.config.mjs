@@ -2,14 +2,14 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+let __filename = fileURLToPath(import.meta.url);
+let __dirname = dirname(__filename);
 
-const compat = new FlatCompat({
+let compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
+let eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

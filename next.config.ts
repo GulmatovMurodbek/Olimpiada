@@ -1,6 +1,6 @@
 // next.config.ts
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+let nextConfig: NextConfig = {
 }
 export default nextConfig;

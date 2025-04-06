@@ -34,11 +34,11 @@ interface Saller {
   imageUsers: string;
   name: string;
 }
-const Likepage = () => {
-  const { t } = useTranslation();
+let Likepage = () => {
+  let { t } = useTranslation();
   let [products, setProducts] = useState<ProductCardProps []>();
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;

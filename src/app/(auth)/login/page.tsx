@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import axios from 'axios'
 import { useRouter } from "next/navigation";
 export default function Home() {
-  const { t, i18n } = useTranslation();
+  let { t, i18n } = useTranslation();
  let router=useRouter()
- const [email, setEmail] = useState("");
- const [password, setPassword] = useState("");
+ let [email, setEmail] = useState("");
+ let [password, setPassword] = useState("");
 
- const handleLogin = async (event:any) => {
+ let handleLogin = async (event:any) => {
    event.preventDefault();
    try {
-     const response = await axios.post("http://localhost:5000/login", {
+     let response = await axios.post("http://localhost:5000/login", {
        email,
        password,
      });

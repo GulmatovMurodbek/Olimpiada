@@ -2,9 +2,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const Like = ({elem}:{elem:any}) => {
+let Like = ({elem}:{elem:any}) => {
   let [client, setclient] = useState<any>([]);
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;
@@ -22,9 +22,9 @@ const Like = ({elem}:{elem:any}) => {
   }
  
   
-   const toggleSave = async () => {
+   let toggleSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/users/${user.id}/saved`, {
+      let response = await fetch(`http://localhost:5000/users/${user.id}/saved`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -43,7 +43,7 @@ const Like = ({elem}:{elem:any}) => {
   useEffect(() => {
     getUserByID(user.id);
   }, []);
-  const isLiked = client?.saved?.some((e: any) => e.idProduct === elem.id);
+  let isLiked = client?.saved?.some((e: any) => e.idProduct === elem.id);
   return (
     // <div>
       <svg

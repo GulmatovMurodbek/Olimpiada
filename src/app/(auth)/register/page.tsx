@@ -5,44 +5,44 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios";
 import { useRouter } from "next/navigation";
-const register = () => {
+let register = () => {
   let [name, setName] = useState("");
   let [password, setpassword] = useState("");
   let [email, setEmail] = useState("");
-  const { t, i18n } = useTranslation();
+  let { t, i18n } = useTranslation();
   let router=useRouter()
-  const handleRegister = async (event: any) => {
+  let handleRegister = async (event: any) => {
     event.preventDefault();
     
     
-    const name = (document.getElementById("name") as HTMLInputElement)?.value;
-    const email = (document.getElementById("email") as HTMLInputElement)?.value;
-    const password = (document.getElementById("password") as HTMLInputElement)?.value;
-    const fileInput = document.getElementById("image") as HTMLInputElement;
-    const file = fileInput?.files?.[0];
+    let name = (document.getElementById("name") as HTMLInputElement)?.value;
+    let email = (document.getElementById("email") as HTMLInputElement)?.value;
+    let password = (document.getElementById("password") as HTMLInputElement)?.value;
+    let fileInput = document.getElementById("image") as HTMLInputElement;
+    let file = fileInput?.files?.[0];
   
     if (!file) {
       alert("Лутфан тасвирро интихоб кунед!");
       return;
     }
   
-    const reader = new FileReader();
+    let reader = new FileReader();
   
     reader.onloadend = () => {
-      const img = new Image();
+      let img = new Image();
       img.src = reader.result as string;
   
       img.onload = async () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+        let canvas = document.createElement("canvas");
+        let ctx = canvas.getContext("2d");
   
-        const maxWidth = 800;
-        const maxHeight = 800;
+        let maxWidth = 800;
+        let maxHeight = 800;
         let width = img.width;
         let height = img.height;
   
         if (width > maxWidth || height > maxHeight) {
-          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          let ratio = Math.min(maxWidth / width, maxHeight / height);
           width = width * ratio;
           height = height * ratio;
         }
@@ -51,10 +51,10 @@ const register = () => {
         canvas.height = height;
         ctx?.drawImage(img, 0, 0, width, height);
   
-        const base64Image = canvas.toDataURL("image/jpeg", 0.8); 
+        let base64Image = canvas.toDataURL("image/jpeg", 0.8); 
   
         
-        const newUser = {
+        let newUser = {
           name,
           email,
           password,
@@ -62,7 +62,7 @@ const register = () => {
         };
   
         try {
-          const response = await axios.post("http://localhost:5000/register", newUser);
+          let response = await axios.post("http://localhost:5000/register", newUser);
           
           if (response.data.token) {
             localStorage.setItem("token", response.data.token);

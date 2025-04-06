@@ -16,12 +16,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProductCard from "../../(home)/cardProduct";
 import Like from "../../(home)/like";
+import { Skeconston } from "@/components/ui/skeleton";
 interface ProductDetails {
   id: string;
   name: string;
@@ -45,26 +45,26 @@ interface Saller {
   imageUsers: string;
   name: string;
 }
-const ProductInfo = () => {
+let ProductInfo = () => {
   let iduser = localStorage.getItem("iduser");
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;
     id: string | number;
   };
-  const { id } = useParams();
-  const { t } = useTranslation();
-  const [product, setProduct] = useState<ProductDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saller, setSaller] = useState<Saller>();
-  const [error, setError] = useState<string | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [dataUser, setDataUser] = useState([]);
+  let { id } = useParams();
+  let { t } = useTranslation();
+  let [product, setProduct] = useState<ProductDetails | null>(null);
+  let [loading, setLoading] = useState(true);
+  let [saller, setSaller] = useState<Saller>();
+  let [error, setError] = useState<string | null>(null);
+  let [currentImageIndex, setCurrentImageIndex] = useState(0);
+  let [dataUser, setDataUser] = useState([]);
   async function getProductById() {
     try {
       setLoading(true);
-      const { data } = await axios.get(`http://localhost:5000/product/${id}`);
+      let { data } = await axios.get(`http://localhost:5000/product/${id}`);
       setProduct(data);
     } catch (error) {
       console.error(error);
@@ -105,12 +105,12 @@ const ProductInfo = () => {
     getUserforCart();
   }, [id]);
 
-  const nextImage = () => {
+  let nextImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
     }
   };
-  const prevImage = () => {
+  let prevImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex(
         (prev) => (prev - 1 + product.images.length) % product.images.length
@@ -122,24 +122,24 @@ const ProductInfo = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-1/2">
-            <Skeleton className="aspect-square w-full rounded-xl" />
+            <Skeconston className="aspect-square w-full rounded-xl" />
             <div className="flex gap-2 mt-4">
               {[1, 2, 3, 4].map((_, i) => (
-                <Skeleton key={i} className="w-20 h-20 rounded-lg" />
+                <Skeconston key={i} className="w-20 h-20 rounded-lg" />
               ))}
             </div>
           </div>
 
           <div className="w-full md:w-1/2">
-            <Skeleton className="h-10 w-3/4 mb-4" />
-            <Skeleton className="h-6 w-1/4 mb-6" />
-            <Skeleton className="h-8 w-1/3 mb-2" />
-            <Skeleton className="h-24 w-full mb-6" />
+            <Skeconston className="h-10 w-3/4 mb-4" />
+            <Skeconston className="h-6 w-1/4 mb-6" />
+            <Skeconston className="h-8 w-1/3 mb-2" />
+            <Skeconston className="h-24 w-full mb-6" />
             <div className="flex gap-4 mb-6">
-              <Skeleton className="h-12 w-1/2" />
-              <Skeleton className="h-12 w-1/2" />
+              <Skeconston className="h-12 w-1/2" />
+              <Skeconston className="h-12 w-1/2" />
             </div>
-            <Skeleton className="h-32 w-full" />
+            <Skeconston className="h-32 w-full" />
           </div>
         </div>
       </div>
@@ -185,14 +185,14 @@ const ProductInfo = () => {
       </div>
     );
   }
-  const toggleCart = async () => {
+  let toggleCart = async () => {
     try {
-      const userResponse = await fetch(
+      let userResponse = await fetch(
         `http://localhost:5000/users/${user.id}/cart-saved`
       );
       if (!userResponse.ok) throw new Error("User not found");
 
-      const userData = await userResponse.json();
+      let userData = await userResponse.json();
       console.log(userData);
 
       let updatedCart = [...userData.cart];
@@ -210,7 +210,7 @@ const ProductInfo = () => {
         });
       }
 
-      const response = await fetch(
+      let response = await fetch(
         `http://localhost:5000/users/${user.id}/cart`,
         {
           method: "PATCH",

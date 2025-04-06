@@ -18,11 +18,11 @@ interface Profile {
   imageUsers: string;
   name: string;
 }
-const Userprofile = () => {
-  const{t}=useTranslation()
+let Userprofile = () => {
+  let{t}=useTranslation()
   let { id } = useParams();
   let [profile, setProfile] = useState<Profile>();
-  const [dataUser, setDataUser] = useState([]);
+  let [dataUser, setDataUser] = useState([]);
   let idUser=localStorage.getItem("iduserforprile")
   async function getUserById() {
     try {

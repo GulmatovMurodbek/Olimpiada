@@ -6,7 +6,7 @@ import "./stylesAuth/style.css";
 import suratLogo from "../../images/Flux_Dev_Design_a_stunning_logo_for_an_online_marketplace___wh_1-removebg-preview.png";
 import Image from "next/image";
 
-const languages = [
+let languages = [
   {
     code: "tj",
     label: "Тоҷикӣ",
@@ -24,15 +24,15 @@ const languages = [
   },
 ];
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { i18n } = useTranslation();
-  const [isMounted, setIsMounted] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(languages[0]);
+let Layout = ({ children }: { children: React.ReactNode }) => {
+  let { i18n } = useTranslation();
+  let [isMounted, setIsMounted] = useState(false);
+  let [selectedLang, setSelectedLang] = useState(languages[0]);
 
   useEffect(() => {
     setIsMounted(true);
-    const savedLang = localStorage.getItem("language") || "tj";
-    const currentLang =
+    let savedLang = localStorage.getItem("language") || "tj";
+    let currentLang =
       languages.find((lang) => lang.code === savedLang) || languages[0];
     i18n.changeLanguage(savedLang);
     setSelectedLang(currentLang);
@@ -40,7 +40,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   if (!isMounted) return null;
 
-  const changeLanguage = (selectedOption: any) => {
+  let changeLanguage = (selectedOption: any) => {
     i18n.changeLanguage(selectedOption.value);
     localStorage.setItem("language", selectedOption.value);
     setSelectedLang(
@@ -49,7 +49,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  const options = languages.map((lang) => ({
+  let options = languages.map((lang) => ({
     value: lang.code,
     label: (
       <div className="flex items-center">

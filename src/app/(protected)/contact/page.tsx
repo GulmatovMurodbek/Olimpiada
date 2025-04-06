@@ -18,8 +18,8 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const Contactpage = () => {
-  const { t } = useTranslation();
+let Contactpage = () => {
+  let { t } = useTranslation();
   return (
     <>
       <section className="w-full py-16 md:py-24 lg:py-32 relative overflow-hidden z-0">

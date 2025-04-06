@@ -24,14 +24,14 @@ import {
 } from "@/components/ui/accordion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Home = () => {
+let Home = () => {
   let router = useRouter();
   let [category, setCategory] = useState([]);
   let [products, setProduct] = useState([]);
 
   let token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const { t } = useTranslation();
+  let { t } = useTranslation();
   useEffect(() => {
     if (!token) {
       router.push("/login");
@@ -57,20 +57,26 @@ const Home = () => {
     getCategory();
     getProduct();
   }, []);
-  const getRandomProducts = (products: any[], count: number) => {
-    const shuffled = [...products].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count); // 8 маҳсулот
+  let getRandomProducts = (products: any[] | undefined, count: number) => {
+    if (!Array.isArray(products) || products.length === 0) {
+      return [];
+    }
+    
+    let shuffled = [...products].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
   };
+  console.log(products);
+  
   return (
     <>
       <div className="w-full flex flex-col lg:flex-row p-5 items-center justify-center gap-[50px] mt-[20px]  dark:bg-[black] divAll2">
         <div className="w-[90%] lg:w-[30%]">
           <h1 className="text-4xl font-sans">{t("homePageHeaderWorld")}</h1>
           <div className="flex mt-[40px] gap-4">
-            <button className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
+            <button onClick={()=>router.push("./product")} className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
               {t("products")}
             </button>
-            <button className="w-[150px] h-[50px] text-[20px] bg-[#27A49C] text-[white] rounded-[10px] ">
+            <button onClick={()=>router.push("/about")} className="w-[150px] h-[50px] text-[20px] bg-[#27A49C] text-[white] rounded-[10px] ">
               {t("about")}
             </button>
           </div>
@@ -117,7 +123,7 @@ const Home = () => {
             <h4 className="text-lg font-semibold mb-2 text-amber-900">
               {t("easySelling")}
             </h4>
-            <p className="text-amber-800/70">{t("simpleTools")}</p>
+            <p className="text-amber-800/70">{t("simpconstools")}</p>
           </div>
           <div className="bg-white dark:bg-[black] p-6 rounded-xl shadow-sm border border-amber-100 text-center w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]">
             <div className="text-4xl mb-4">💬</div>
@@ -134,10 +140,10 @@ const Home = () => {
         <div className="w-[100%] lg:w-[30%]">
           <h1 className="text-4xl font-sans">{t("everyCraft")}</h1>
           <div className="flex mt-[40px] gap-4">
-            <button className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
+            <button onClick={()=>router.push("/product")} className="w-[150px] h-[50px] text-[20px] bg-[#E6B312] text-[white] rounded-[10px]">
               {t("products")}
             </button>
-            <button className="w-[150px] h-[50px] text-[20px] bg-[#27A49C] text-[white] rounded-[10px] ">
+            <button onClick={()=>router.push("/about")} className="w-[150px] h-[50px] text-[20px] bg-[#27A49C] text-[white] rounded-[10px] ">
               {t("about")}
             </button>
           </div>
@@ -146,7 +152,7 @@ const Home = () => {
       <div className="container mx-auto p-6">
         <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {getRandomProducts(products, 8).map((product: any) => (
+          {getRandomProducts(products, 6).map((product: any) => (
             <ProductCard key={product.id} product={product}/>
           ))}
         </div>
@@ -236,7 +242,7 @@ const Home = () => {
           <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
             {t("join")}
           </p>
-          <Button size="lg" variant="secondary" className="font-medium">
+          <Button onClick={()=>router.push("/myproducts")} size="lg" variant="secondary" className="font-medium">
             {t("todaySall")}
           </Button>
         </div>
@@ -510,7 +516,7 @@ const Home = () => {
               </div>
 
               <div className="mt-10 text-center">
-                <Button size="lg" className="font-medium">
+                <Button onClick={()=>router.push("/myproducts")} size="lg" className="font-medium">
                   {t("today")}
                 </Button>
               </div>
@@ -736,7 +742,7 @@ const Home = () => {
               </div>
 
               <div className="mt-10 text-center">
-                <Button size="lg" variant="outline" className="font-medium">
+                <Button onClick={()=>router.push("/products")} size="lg" variant="outline" className="font-medium">
                   {t("startShoping")}
                 </Button>
               </div>

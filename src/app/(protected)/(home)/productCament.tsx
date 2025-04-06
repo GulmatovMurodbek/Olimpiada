@@ -18,9 +18,10 @@ interface Product {
   length:string | number,
   camments:any
 }
-const ProductCament = ({ idProduct }: { idProduct: any }) => {
+let ProductCament = ({ idProduct }: { idProduct: any }) => {
   let [addcommentinp, setaddcomentinp] = useState("");
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let[addreplice,setReplice]=useState("")
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;
@@ -31,7 +32,7 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
 
   async function getProductById() {
     try {
-      const { data } = await axios.get(
+      let { data } = await axios.get(
         `http://localhost:5000/product/${idProduct}`
       );
       setProduct(data);
@@ -56,31 +57,49 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
       console.error(error);
     }
   }
-  const [showReplyInputs, setShowReplyInputs] = useState<
+  async function addReplice(idProduct:any) {
+    try {
+      await axios.post("http://localhost:5000/addreplice",
+        {
+          addrepliesName:user.name,
+          addrepliesText:addreplice,
+          idrepliceUser:user.id,
+          productId:product?.id,
+          idcoment:idProduct,
+          avatar:user.imageUsers
+        }
+      )
+      getProductById()
+      setReplice("")
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  let [showReplyInputs, setShowReplyInputs] = useState<
     Record<number, boolean>
   >({});
 
-  const toggleReplyInput = (commentId: number) => {
+  let toggleReplyInput = (commentId: number) => {
     setShowReplyInputs((prev) => ({
       ...prev,
       [commentId]: !prev[commentId],
     }));
   };
-  const nextImage = () => {
+  let nextImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
     }
   };
-  const prevImage = () => {
+  let prevImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex(
         (prev) => (prev - 1 + product.images.length) % product.images.length
       );
     }
   };
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  let [currentImageIndex, setCurrentImageIndex] = useState(0);
+  let [isModalOpen, setIsModalOpen] = useState(false);
+  let toggleModal = () => setIsModalOpen(!isModalOpen);
   return (
     <>
       <span>
@@ -101,8 +120,8 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
         </svg>
       </span>
       {isModalOpen && (
-        <div className="fixed inset-0 bg-[#0000007a] bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="container mx-auto py-8 px-4 w-[950px] rounded-[30px] bg-[white]">
+        <div className="fixed inset-0 bg-[#0000007a] bg-opacity-50 z-50 flex items-center justify-center p-4 h-screen">
+          <div className="container mx-auto py-8 px-4 w-[950px] h-[600px] rounded-[30px] bg-[white]">
             <span className="flex w-full justify-end">
               <svg
                 onClick={toggleModal}
@@ -134,7 +153,7 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                     width={600}
                     height={600}
                   />
-                  {product.images.length > 1 && (
+                  {product && product.images && product.images.length  > 1 && (
                     <div className="absolute inset-0 flex items-center justify-between p-4">
                       <Button
                         variant="secondary"
@@ -155,8 +174,8 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                     </div>
                   )}
                 </div>
-                {product.images.length > 1 && (
-                  <div className="flex space-x-4 overflow-x-auto py-2 scrollbar-hide">
+                {product && product.images && product.images.length  > 1 && (
+                  <div className="flex space-x-4 overflow-x-auto h-[300px] py-2 scrollbar-hide">
                     {product?.images.map((image: any, index: any) => (
                       <button
                         key={index}
@@ -179,12 +198,12 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                   </div>
                 )}
               </div>
-              <div className="w-full md:w-1/2">
-                <div className="bg-card rounded-xl shadow-sm p-4 h-full">
+              <div className="w-full h-[400px] md:w-1/2 overflow-x-auto">
+                <div className="bg-card rounded-xl  h-[400px]">
                   <h3 className="font-semibold text-lg mb-4 text-card-foreground">
                     Customer Reviews
                   </h3>
-                  <div className="space-y-6 overflow-y-auto max-h-[600px] pr-2">
+                  <div className="space-y-6 overflow-y-auto h-[300px] pr-2">
                     {product?.camments.map((comment: any) => (
                       <div key={comment.idcoment} className="space-y-2">
                         <div className="flex">
@@ -232,6 +251,8 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                               </Avatar>
                               <div className="flex-1 flex items-center border rounded-full overflow-hidden bg-background pr-2">
                                 <Input
+                                value={addreplice}
+                                onChange={(e)=>setReplice(e.target.value)}
                                   placeholder={`Reply to ${comment.nameAddComents}...`}
                                   className="flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 h-8 text-sm"
                                 />
@@ -244,6 +265,7 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                                     <Smile className="h-4 w-4 text-muted-foreground" />
                                   </Button>
                                   <Button
+                                    onClick={()=>addReplice(comment.idcoment)}
                                     variant="ghost"
                                     className="h-6 text-xs font-semibold text-primary"
                                   >
@@ -257,7 +279,7 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
 
                         {/* Посухҳо */}
                         {comment.replies && comment.replies.length > 0 && (
-                          <div className="ml-10 space-y-2 mt-2">
+                          <div className="ml-10 space-y-2 mt-2 overflow-y-auto">
                             {comment.replies.map((reply: any) => (
                               <div key={reply.idaddreplices} className="flex">
                                 <Avatar className="h-7 w-7 mr-2 flex-shrink-0 border">
@@ -294,10 +316,10 @@ const ProductCament = ({ idProduct }: { idProduct: any }) => {
                   </div>
 
                   {/* Илова кардани изҳори нав */}
-                  <div className="mt-6 pt-4 border-t">
+                  <div className=" mt-[10px] border-t">
                     <div className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2 border">
-                        <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                        <AvatarImage src={user.imageUsers} />
                         <AvatarFallback>ME</AvatarFallback>
                       </Avatar>
                       <div className="flex-1 flex items-center border rounded-full overflow-hidden bg-muted/20 pr-2">

@@ -25,23 +25,24 @@ interface Products {
   newPrice?: number;
   iduser: string;
 }
-const Myproduct = () => {
+let Myproduct = () => {
   let { t } = useTranslation();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [products, setProducts] = useState<Products[]>([]);
-  const [name, setName] = useState("");
-  const [images, setImageFiles] = useState("");
-  const [originalPrice, setOriginalPrice] = useState("");
-  const [newPrice, setNewPrice] = useState("");
-  const [about, setAbout] = useState("");
-  const [minOrder, setMinOrder] = useState("");
-  const [size, setSize] = useState("");
-  const [weight, setWeight] = useState("");
-  const [category, setCategory] = useState("");
-  const [currentImageIndices, setCurrentImageIndices] = useState<{
+  let [isDialogOpen, setIsDialogOpen] = useState(false);
+  let [products, setProducts] = useState<Products[]>([]);
+  let [name, setName] = useState("");
+  let [images, setImageFiles] = useState("");
+  let [originalPrice, setOriginalPrice] = useState("");
+  let [newPrice, setNewPrice] = useState("");
+  let [about, setAbout] = useState("");
+  let [minOrder, setMinOrder] = useState("");
+  let [size, setSize] = useState("");
+  let [weight, setWeight] = useState("");
+  let [category, setCategory] = useState("");
+  let [currentImageIndices, setCurrentImageIndices] = useState<{
     [key: string]: number;
   }>({});
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;
@@ -53,7 +54,7 @@ const Myproduct = () => {
         `http://localhost:5000/product/users/${user.id}`
       );
       setProducts(data);
-      const initialIndices = data.reduce((acc: any, product: any) => {
+      let initialIndices = data.reduce((acc: any, product: any) => {
         acc[product.id] = 0;
         return acc;
       }, {});
@@ -65,37 +66,37 @@ const Myproduct = () => {
   useEffect(() => {
     getProductsByIdUser();
   }, []);
-  const nextImage = (productId: string, imageCount: number) => {
+  let nextImage = (productId: string, imageCount: number) => {
     setCurrentImageIndices((prevIndices) => ({
       ...prevIndices,
       [productId]: (prevIndices[productId] + 1) % imageCount,
     }));
   };
-  const prevImage = (productId: string, imageCount: number) => {
+  let prevImage = (productId: string, imageCount: number) => {
     setCurrentImageIndices((prevIndices) => ({
       ...prevIndices,
       [productId]: (prevIndices[productId] - 1 + imageCount) % imageCount,
     }));
   };
-  const handleImageChange = (e:any) => {
-    const files = Array.from(e.target.files);
-    const promises = files.map((file:any) => {
+  let handleImageChange = (e:any) => {
+    let files = Array.from(e.target.files);
+    let promises = files.map((file:any) => {
       return new Promise((resolve) => {
-        const reader = new FileReader();
+        let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => resolve(reader.result);
       });
     });
     Promise.all(promises).then((base64Images:any) => setImageFiles(base64Images));
   };
-  const handleAddProduct = async () => {
+  let handleAddProduct = async () => {
     try {
       if (!name || !originalPrice || !category) {
         alert("Ҳамаи майдонҳои лозимӣ бояд пур карда шаванд!");
         return;
       }
   
-      const newProduct = {
+      let newProduct = {
         name,
         images,
         originalPrice: Number(originalPrice),
@@ -105,10 +106,10 @@ const Myproduct = () => {
         size,
         weight,
         category,
-        iduser: user.id, 
+        iduser:user.id, 
       };
   
-      const response = await axios.post("http://localhost:5000/product", newProduct);
+      let response = await axios.post("http://localhost:5000/product", newProduct);
       console.log("Маҳсулот бо муваффақият илова шуд:", response.data)
       setIsDialogOpen(false);
       getProductsByIdUser();
@@ -117,6 +118,17 @@ const Myproduct = () => {
       console.error("Хатогӣ ҳангоми иловаи маҳсулот:", error);
     }
   };
+  
+  const handleDeleteProduct = async (productId: string) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/product/${productId}`);
+      console.log("Маҳсулот бо муваффақият устувор шуд:", response.data)
+      getProductsByIdUser();
+    } catch (error) {
+      console.error("Хатогӣ ҳангоми устувор кардани маҳсулот:", error);
+    }
+  };
+  
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -195,7 +207,7 @@ const Myproduct = () => {
                   className="w-full max-w-md overflow-hidden border-0 shadow-lg rounded-xl"
                 >
                   <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-5" />
 
                     <img
                       src={
@@ -217,7 +229,7 @@ const Myproduct = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute left-2 top-1/2 z-20 h-8 w-8 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50"
+                          className="absolute left-2 top-1/2 z-5 h-8 w-8 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50"
                           onClick={() =>
                             prevImage(product.id, product.images.length)
                           }
@@ -229,7 +241,7 @@ const Myproduct = () => {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="absolute right-2 top-1/2 z-20 h-8 w-8 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50"
+                          className="absolute right-2 top-1/2 z-5 h-8 w-8 -translate-y-1/2 rounded-full bg-black/30 text-white hover:bg-black/50"
                           onClick={() =>
                             nextImage(product.id, product.images.length)
                           }
@@ -268,8 +280,8 @@ const Myproduct = () => {
                     </div>
                   </CardContent>
                   <div>
-                    <Button variant="destructive" className="ml-[20px]">
-                      {t("delete")}
+                    <Button onClick={()=>handleDeleteProduct(product.id)} variant="destructive" className="ml-[20px]">
+                      {t("deconste")}
                     </Button>
                   </div>
                 </Card>

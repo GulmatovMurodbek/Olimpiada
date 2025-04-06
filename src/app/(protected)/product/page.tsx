@@ -11,23 +11,23 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import ProductCard from "../(home)/cardProduct"
 
-const Product = () => {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [products, setProducts] = useState([])
-  const [filteredProducts, setFilteredProducts] = useState([])
-  const [categories, setCategories] = useState([])
-  const [activeCategory, setActiveCategory] = useState("all")
-  const [priceRange, setPriceRange] = useState([0, 150])
-  const [filtersOpen, setFiltersOpen] = useState(false)
-  const { t } = useTranslation()
+let Product = () => {
+  let [searchQuery, setSearchQuery] = useState("")
+  let [products, setProducts] = useState([])
+  let [filteredProducts, setFilteredProducts] = useState([])
+  let [categories, setCategories] = useState([])
+  let [activeCategory, setActiveCategory] = useState("all")
+  let [priceRange, setPriceRange] = useState([0, 150])
+  let [filtersOpen, setFiltersOpen] = useState(false)
+  let { t } = useTranslation()
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(8)
-  const [totalPages, setTotalPages] = useState(1)
+  let [currentPage, setCurrentPage] = useState(1)
+  let [itemsPerPage, setItemsPerPage] = useState(8)
+  let [totalPages, setTotalPages] = useState(1)
 
   async function getCategory() {
     try {
-      const { data } = await axios.get("http://localhost:5000/category")
+      let { data } = await axios.get("http://localhost:5000/category")
       setCategories(data)
     } catch (error) {
       console.error(error)
@@ -36,7 +36,7 @@ const Product = () => {
 
   async function getProduct() {
     try {
-      const { data } = await axios.get("http://localhost:5000/products")
+      let { data } = await axios.get("http://localhost:5000/products")
       setProducts(data)
       applyFilters(data)
     } catch (error) {
@@ -44,20 +44,20 @@ const Product = () => {
     }
   }
 
-  const applyFilters = (productsData = products) => {
-    let result = [...productsData]
+  let applyFilters = (productsData = products) => {
+    let result:any = [...productsData]
 
     if (activeCategory !== "all") {
-      result = result.filter((product: any) => product.category === activeCategory)
+      result= result.filter((product: any) => product.category === activeCategory)
     }
 
     result = result.filter((product: any) => {
-      const price = product.price || 0
+      let price = product.price || 0
       return price >= priceRange[0] && price <= priceRange[1]
     })
 
     if (searchQuery) {
-      const query = searchQuery.toLowerCase()
+      let query = searchQuery.toLowerCase()
       result = result.filter(
         (product: any) =>
           product.name?.toLowerCase().includes(query) || product.description?.toLowerCase().includes(query),
@@ -69,18 +69,10 @@ const Product = () => {
     setCurrentPage(1)
   }
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({
-      top: document.getElementById("products-section")?.offsetTop || 0,
-      behavior: "smooth",
-    })
-  }
 
-  // Get current page products
-  const getCurrentPageProducts = () => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
+  let getCurrentPageProducts = () => {
+    let startIndex = (currentPage - 1) * itemsPerPage
+    let endIndex = startIndex + itemsPerPage
     return filteredProducts.slice(startIndex, endIndex)
   }
 
@@ -93,11 +85,11 @@ const Product = () => {
     applyFilters()
   }, [activeCategory, priceRange, searchQuery])
 
-  const handlePrevPage = () => {
+  let handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1))
   }
 
-  const handleNextPage = () => {
+  let handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
   }
 
@@ -279,7 +271,7 @@ const Product = () => {
             </Button>
 
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageToShow
+              let pageToShow:any=null
 
               if (totalPages <= 5) {
                 pageToShow = i + 1
@@ -326,7 +318,7 @@ const Product = () => {
             className="text-sm border rounded-md px-2 py-1"
             value={itemsPerPage}
             onChange={(e) => {
-              const newItemsPerPage = Number.parseInt(e.target.value)
+              let newItemsPerPage = Number.parseInt(e.target.value)
               setItemsPerPage(newItemsPerPage)
               setTotalPages(Math.ceil(filteredProducts.length / newItemsPerPage))
               setCurrentPage(1)

@@ -31,18 +31,18 @@ interface Saller {
   name: string;
 }
 export default function ProductCard({ product}: ProductCardProps) {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  let [currentImageIndex, setCurrentImageIndex] = useState(0);
   let [saller, setSaller] = useState<Saller>();
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string;
     age: number;
     imageUsers: string;
     id: string | number;
   };
-  const nextImage = () => {
+  let nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
   };
-  const prevImage = () => {
+  let prevImage = () => {
     setCurrentImageIndex(
       (prev: any) => (prev - 1 + product.images.length) % product.images.length
     );
@@ -67,14 +67,14 @@ export default function ProductCard({ product}: ProductCardProps) {
       console.error(error);
     }
   }
-  const toggleCart = async () => {
+  let toggleCart = async () => {
     try {
-      const userResponse = await fetch(
+      let userResponse = await fetch(
         `http://localhost:5000/users/${user.id}/cart-saved`
       );
       if (!userResponse.ok) throw new Error("User not found");
 
-      const userData = await userResponse.json();
+      let userData = await userResponse.json();
       console.log(userData);
 
       let updatedCart = [...userData.cart];
@@ -92,7 +92,7 @@ export default function ProductCard({ product}: ProductCardProps) {
         });
       }
 
-      const response = await fetch(
+      let response = await fetch(
         `http://localhost:5000/users/${user.id}/cart`,
         {
           method: "PATCH",
@@ -128,7 +128,7 @@ export default function ProductCard({ product}: ProductCardProps) {
       <div className="relative aspect-square overflow-hidden">
         <div className="relative w-full h-full">
           <img
-            src={product.images[currentImageIndex] || "/placeholder.svg"}
+            src={product.images[currentImageIndex]}
             alt={`${product.name} - image ${currentImageIndex + 1}`}
             className="object-cover transition-transform duration-300 group-hover:scale-105 w-[90%] m-auto h-[250px]"
           />

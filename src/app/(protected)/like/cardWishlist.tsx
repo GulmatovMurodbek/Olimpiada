@@ -29,25 +29,25 @@ interface Seller {
   name: string
 }
 
-const CardWishlist = ({ product }: { product: ProductProps }) => {
-  const [seller, setSeller] = useState<Seller | null>(null)
-  const { t } = useTranslation()
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+let CardWishlist = ({ product }: { product: ProductProps }) => {
+  let [seller, setSeller] = useState<Seller | null>(null)
+  let { t } = useTranslation()
+  let [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}") as {
+  let user = JSON.parse(localStorage.getItem("user") || "{}") as {
     name: string
     age: number
     imageUsers: string
     id: string | number
   }
 
-  const nextImage = () => {
+  let nextImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex((prev) => (prev + 1) % product.images.length)
     }
   }
 
-  const prevImage = () => {
+  let prevImage = () => {
     if (product?.images && product.images.length > 0) {
       setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length)
     }
@@ -55,7 +55,7 @@ const CardWishlist = ({ product }: { product: ProductProps }) => {
 
   async function getUserById() {
     try {
-      const { data } = await axios.get(`http://localhost:5000/users/${product.iduser}`)
+      let { data } = await axios.get(`http://localhost:5000/users/${product.iduser}`)
       setSeller(data)
     } catch (error) {
       console.error("Error fetching seller:", error)
@@ -64,13 +64,13 @@ const CardWishlist = ({ product }: { product: ProductProps }) => {
 
   async function addToCart() {
     try {
-      const userResponse = await fetch(`http://localhost:5000/users/${user.id}/cart-saved`)
+      let userResponse = await fetch(`http://localhost:5000/users/${user.id}/cart-saved`)
       if (!userResponse.ok) throw new Error("User not found")
 
-      const userData = await userResponse.json()
-      const updatedCart = [...userData.cart]
+      let userData = await userResponse.json()
+      let updatedCart = [...userData.cart]
 
-      const productIndex = updatedCart.findIndex((item) => item.idProduct === product.id)
+      let productIndex = updatedCart.findIndex((item) => item.idProduct === product.id)
       if (productIndex !== -1) {
         updatedCart[productIndex].cnt += 1
       } else {
@@ -81,7 +81,7 @@ const CardWishlist = ({ product }: { product: ProductProps }) => {
         })
       }
 
-      const response = await fetch(`http://localhost:5000/users/${user.id}/cart`, {
+      let response = await fetch(`http://localhost:5000/users/${user.id}/cart`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cart: updatedCart }),
